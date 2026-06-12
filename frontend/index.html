@@ -1,0 +1,116 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>JKT Mood Playlist</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <main class="page-shell">
+      <section class="composer-panel" aria-labelledby="page-title">
+        <nav class="brand-row" aria-label="Product">
+          <div class="brand">
+            <span class="brand-mark" aria-hidden="true"></span>
+            <div>
+              <strong>JKT Pulse</strong>
+              <span>Emotion to playlist</span>
+            </div>
+          </div>
+          <button class="spotify-button" id="connectSpotify" type="button">
+            <span class="spotify-dot" aria-hidden="true"></span>
+            Connect Spotify
+          </button>
+        </nav>
+
+        <div class="hero-copy">
+          <span class="eyebrow">Mood-aware music generator</span>
+          <h1 id="page-title">Tell us how you feel. Get a playlist that fits the moment.</h1>
+          <p>
+            Enter a sentence like “I am tired and frustrated.” The model detects your emotion,
+            maps it to Spotify-friendly music traits, and builds a playlist recommendation.
+          </p>
+        </div>
+
+        <form class="mood-form" id="moodForm">
+          <label for="feelingInput">What are you feeling right now?</label>
+          <div class="input-wrap">
+            <textarea
+              id="feelingInput"
+              name="feeling"
+              rows="5"
+              placeholder="I am tired and frustrated, but I want something that helps me reset..."
+              required
+            ></textarea>
+            <button class="generate-button" type="submit">Generate playlist</button>
+          </div>
+          <div class="quick-prompts" aria-label="Example feelings">
+            <button type="button">I feel anxious before my exam</button>
+            <button type="button">I am happy and full of energy</button>
+            <button type="button">I feel lonely and low tonight</button>
+          </div>
+        </form>
+      </section>
+
+      <section class="result-panel" aria-live="polite">
+        <div class="status-card" id="statusCard">
+          <span class="eyebrow">Detected emotion</span>
+          <div class="emotion-result">
+            <div class="emotion-disc" id="emotionDisc">?</div>
+            <div>
+              <h2 id="emotionLabel">Awaiting input</h2>
+              <p id="emotionSummary">Your playlist preview will appear here after generation.</p>
+            </div>
+          </div>
+          <div class="confidence-row">
+            <span>Confidence</span>
+            <strong id="confidenceValue">0%</strong>
+          </div>
+          <div class="meter"><span id="confidenceMeter"></span></div>
+        </div>
+
+        <div class="playlist-card">
+          <div class="playlist-heading">
+            <div>
+              <span class="eyebrow">Playlist preview</span>
+              <h2 id="playlistTitle">No playlist yet</h2>
+            </div>
+            <button class="save-button" id="savePlaylist" type="button" disabled>Save to Spotify</button>
+          </div>
+          <div class="track-list" id="trackList">
+            <div class="empty-state">
+              <strong>Your recommendations are waiting.</strong>
+              <span>Generate a playlist to see tracks, mood tags, and Spotify-ready metadata.</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="integration-card">
+          <span class="eyebrow">Spotify handoff</span>
+          <div class="integration-grid">
+            <article>
+              <strong>1. Detect</strong>
+              <span>POST user text to the backend emotion endpoint.</span>
+            </article>
+            <article>
+              <strong>2. Recommend</strong>
+              <span>Map emotion into seed genre, valence, energy, and tempo.</span>
+            </article>
+            <article>
+              <strong>3. Save</strong>
+              <span>Create a Spotify playlist after OAuth is configured.</span>
+            </article>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <script src="./app.js" type="module"></script>
+  </body>
+</html>

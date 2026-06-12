@@ -1,0 +1,452 @@
+:root {
+  color-scheme: dark;
+  --bg: #101114;
+  --panel: rgba(25, 27, 32, 0.82);
+  --panel-strong: #20232a;
+  --line: rgba(255, 255, 255, 0.11);
+  --text: #f7f4ea;
+  --muted: #adb2bd;
+  --green: #1ed760;
+  --mint: #78f0b2;
+  --coral: #ff796c;
+  --amber: #f5b84b;
+  --blue: #69a7ff;
+  --shadow: 0 24px 70px rgba(0, 0, 0, 0.35);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  min-width: 320px;
+  min-height: 100vh;
+  margin: 0;
+  font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  background:
+    radial-gradient(circle at 16% 12%, rgba(30, 215, 96, 0.18), transparent 30%),
+    radial-gradient(circle at 86% 18%, rgba(255, 121, 108, 0.14), transparent 28%),
+    linear-gradient(135deg, #0f1012 0%, #17191f 48%, #111419 100%);
+  color: var(--text);
+}
+
+button,
+textarea {
+  font: inherit;
+}
+
+button {
+  cursor: pointer;
+}
+
+button:disabled {
+  cursor: not-allowed;
+  opacity: 0.68;
+}
+
+.page-shell {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(420px, 0.72fr);
+  gap: 28px;
+  width: min(1220px, calc(100% - 40px));
+  min-height: 100vh;
+  margin: 0 auto;
+  padding: 32px 0;
+  align-items: stretch;
+}
+
+.composer-panel,
+.result-panel {
+  min-width: 0;
+}
+
+.composer-panel {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 40px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: clamp(24px, 4vw, 44px);
+  background:
+    linear-gradient(135deg, rgba(30, 215, 96, 0.09), transparent 45%),
+    rgba(15, 17, 20, 0.78);
+  box-shadow: var(--shadow);
+}
+
+.brand-row,
+.brand,
+.spotify-button,
+.emotion-result,
+.confidence-row,
+.playlist-heading {
+  display: flex;
+  align-items: center;
+}
+
+.brand-row {
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.brand {
+  gap: 12px;
+}
+
+.brand-mark {
+  width: 44px;
+  height: 44px;
+  border-radius: 8px;
+  background:
+    linear-gradient(135deg, transparent 46%, rgba(255, 255, 255, 0.38) 48%, transparent 50%),
+    conic-gradient(from 160deg, var(--green), var(--amber), var(--coral), var(--blue), var(--green));
+  box-shadow: 0 16px 34px rgba(30, 215, 96, 0.2);
+}
+
+.brand strong,
+.brand span {
+  display: block;
+}
+
+.brand span,
+.hero-copy p,
+.emotion-result p,
+.empty-state span,
+.integration-grid span,
+.track-row span {
+  color: var(--muted);
+}
+
+.brand span {
+  margin-top: 3px;
+  font-size: 0.8rem;
+}
+
+.spotify-button,
+.generate-button,
+.save-button,
+.quick-prompts button {
+  min-height: 44px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 8px;
+  color: var(--text);
+}
+
+.spotify-button {
+  gap: 10px;
+  padding: 0 14px;
+  background: rgba(255, 255, 255, 0.07);
+  font-weight: 700;
+}
+
+.spotify-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--green);
+  box-shadow: 0 0 0 6px rgba(30, 215, 96, 0.12);
+}
+
+.eyebrow {
+  color: var(--mint);
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+h1,
+h2,
+p {
+  margin-top: 0;
+}
+
+h1 {
+  max-width: 760px;
+  margin-bottom: 18px;
+  font-size: clamp(2.4rem, 6vw, 5.7rem);
+  line-height: 0.92;
+}
+
+h2 {
+  margin-bottom: 8px;
+  font-size: clamp(1.35rem, 2vw, 2rem);
+  line-height: 1.08;
+}
+
+.hero-copy p {
+  max-width: 680px;
+  margin-bottom: 0;
+  font-size: 1.04rem;
+  line-height: 1.7;
+}
+
+.mood-form {
+  display: grid;
+  gap: 14px;
+}
+
+.mood-form label {
+  color: var(--text);
+  font-weight: 800;
+}
+
+.input-wrap {
+  display: grid;
+  gap: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 8px;
+  padding: 12px;
+  background: rgba(255, 255, 255, 0.055);
+}
+
+textarea {
+  width: 100%;
+  min-height: 150px;
+  resize: vertical;
+  border: 0;
+  outline: 0;
+  border-radius: 6px;
+  padding: 16px;
+  background: rgba(8, 10, 12, 0.72);
+  color: var(--text);
+  line-height: 1.55;
+}
+
+textarea::placeholder {
+  color: rgba(247, 244, 234, 0.46);
+}
+
+.generate-button {
+  background: var(--green);
+  color: #07120b;
+  font-weight: 900;
+}
+
+.quick-prompts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.quick-prompts button {
+  padding: 0 13px;
+  background: rgba(255, 255, 255, 0.065);
+}
+
+.result-panel {
+  display: grid;
+  align-content: center;
+  gap: 16px;
+}
+
+.status-card,
+.playlist-card,
+.integration-card {
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--panel);
+  box-shadow: var(--shadow);
+}
+
+.status-card,
+.playlist-card,
+.integration-card {
+  padding: 22px;
+}
+
+.emotion-result {
+  gap: 16px;
+  margin: 18px 0 22px;
+}
+
+.emotion-disc {
+  display: grid;
+  place-items: center;
+  width: 96px;
+  height: 96px;
+  flex: 0 0 auto;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--green), var(--amber));
+  color: #07120b;
+  font-size: 2.8rem;
+  font-weight: 900;
+  box-shadow: 0 0 0 18px rgba(30, 215, 96, 0.08);
+}
+
+.emotion-result p {
+  margin-bottom: 0;
+  line-height: 1.55;
+}
+
+.confidence-row,
+.playlist-heading {
+  justify-content: space-between;
+  gap: 14px;
+}
+
+.confidence-row {
+  margin-bottom: 10px;
+  color: var(--muted);
+}
+
+.meter {
+  height: 9px;
+  overflow: hidden;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.meter span {
+  display: block;
+  width: 0;
+  height: 100%;
+  border-radius: inherit;
+  transition: width 280ms ease;
+}
+
+.save-button {
+  padding: 0 14px;
+  background: rgba(255, 255, 255, 0.075);
+  font-weight: 800;
+  white-space: nowrap;
+}
+
+.track-list {
+  display: grid;
+  gap: 11px;
+  margin-top: 18px;
+}
+
+.empty-state {
+  display: grid;
+  gap: 7px;
+  min-height: 160px;
+  align-content: center;
+  border: 1px dashed rgba(255, 255, 255, 0.18);
+  border-radius: 8px;
+  padding: 18px;
+  text-align: center;
+}
+
+.track-row {
+  display: grid;
+  grid-template-columns: 52px minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 13px;
+  min-height: 74px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 8px;
+  padding: 11px;
+  background: rgba(255, 255, 255, 0.045);
+}
+
+.track-row strong,
+.track-row span {
+  display: block;
+}
+
+.track-row em {
+  color: var(--mint);
+  font-style: normal;
+  font-weight: 900;
+}
+
+.track-art {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 52px;
+  height: 52px;
+  overflow: hidden;
+  border-radius: 8px;
+  color: rgba(7, 18, 11, 0.78);
+  font-weight: 900;
+}
+
+.track-art::after {
+  content: "";
+  position: absolute;
+  inset: 17px;
+  border: 5px solid rgba(255, 255, 255, 0.76);
+  border-radius: 50%;
+}
+
+.track-art span {
+  position: relative;
+  z-index: 1;
+}
+
+.integration-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+  margin-top: 14px;
+}
+
+.integration-grid article {
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 8px;
+  padding: 14px;
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.integration-grid strong,
+.integration-grid span {
+  display: block;
+}
+
+.integration-grid span {
+  margin-top: 8px;
+  font-size: 0.88rem;
+  line-height: 1.45;
+}
+
+@media (max-width: 980px) {
+  .page-shell {
+    grid-template-columns: 1fr;
+  }
+
+  .result-panel {
+    align-content: start;
+  }
+}
+
+@media (max-width: 640px) {
+  .page-shell {
+    width: min(100% - 28px, 1220px);
+    padding: 14px 0;
+  }
+
+  .brand-row,
+  .playlist-heading,
+  .emotion-result {
+    align-items: flex-start;
+  }
+
+  .brand-row,
+  .playlist-heading {
+    display: grid;
+  }
+
+  .spotify-button,
+  .save-button {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .integration-grid,
+  .track-row {
+    grid-template-columns: 1fr;
+  }
+
+  .track-row {
+    justify-items: start;
+  }
+
+  .track-row em {
+    justify-self: stretch;
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+    padding-top: 10px;
+  }
+}
