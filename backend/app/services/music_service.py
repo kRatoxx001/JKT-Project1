@@ -112,7 +112,9 @@ def save_playlist_to_spotify(name: str, description: str, track_uris: list[str])
 
 def _get_spotify_recommendations(profile: dict) -> list[dict]:
     settings = get_settings()
+
     if not settings.spotify_client_id or not settings.spotify_client_secret:
+        print("Spotify credentials missing")
         return []
 
     try:
@@ -123,29 +125,42 @@ def _get_spotify_recommendations(profile: dict) -> list[dict]:
             client_id=settings.spotify_client_id,
             client_secret=settings.spotify_client_secret,
         )
+
         spotify = spotipy.Spotify(auth_manager=auth_manager)
-        response = spotify.recommendations(limit=8, **profile)
-    except Exception:
+
+        print("Requesting recommendations...")
+
+        response = spotify.recommendations(
+            limit=8,
+            **profile
+        )
+
+        print(response)
+
+    except Exception as e:
+        print("\n==========================")
+        print("SPOTIFY ERROR:")
+        print(type(e).__name__)
+        print(e)
+        print("==========================\n")
         return []
 
     tracks = []
-    for item in response.get("tracks", []):
-        artists = ", ".join(artist["name"] for artist in item.get("artists", []))
-        tracks.append(
-            {
-                "title": item.get("name", "Untitled"),
-                "artist": artists or "Unknown artist",
-                "mood": profile["seed_genres"][0],
-                "match": 90,
-                "spotify_uri": item.get("uri"),
-                "preview_url": item.get("preview_url"),
-                "external_url": item.get("external_urls", {}).get("spotify"),
-            }
-        )
+
+    for item in response["tracks"]:
+        artists = ", ".join(a["name"] for a in item["artists"])
+
+        tracks.append({
+            "title": item["name"],
+            "artist": artists,
+            "mood": profile["seed_genres"][0],
+            "match": 90,
+            "spotify_uri": item["uri"],
+            "preview_url": item["preview_url"],
+            "external_url": item["external_urls"]["spotify"],
+        })
 
     return tracks
-
-
 def _get_user_auth_manager():
     settings = get_settings()
     if not settings.spotify_client_id or not settings.spotify_client_secret:
