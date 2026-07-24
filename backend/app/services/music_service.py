@@ -92,24 +92,43 @@ def save_playlist_to_spotify(name: str, description: str, track_uris: list[str])
         import spotipy
 
         spotify = spotipy.Spotify(auth_manager=auth_manager)
+
+        # Print logged-in Spotify user
         user = spotify.current_user()
+        print("\n========== CURRENT USER ==========")
+        print(user)
+        print("==================================\n")
+
+        # Create playlist
         playlist = spotify.user_playlist_create(
             user=user["id"],
             name=name,
             public=False,
             description=description,
         )
+
+        # Add tracks
         if track_uris:
-            spotify.playlist_add_items(playlist["id"], track_uris)
+            spotify.playlist_add_items(
+                playlist["id"],
+                track_uris,
+            )
+
+        return {
+            "playlist_id": playlist["id"],
+            "external_url": playlist["external_urls"]["spotify"],
+        }
+
     except Exception as exc:
-        raise RuntimeError("Spotify playlist creation failed") from exc
+        import traceback
 
-    return {
-        "playlist_id": playlist["id"],
-        "external_url": playlist.get("external_urls", {}).get("spotify"),
-    }
+        print("\n========== SPOTIFY SAVE ERROR ==========")
+        traceback.print_exc()
+        print("Error Type:", type(exc).__name__)
+        print("Error:", exc)
+        print("========================================\n")
 
-
+        raise
 def _get_spotify_recommendations(profile: dict) -> list[dict]:
     settings = get_settings()
 
@@ -128,18 +147,20 @@ def _get_spotify_recommendations(profile: dict) -> list[dict]:
 
         spotify = spotipy.Spotify(auth_manager=auth_manager)
 
-        print("Requesting recommendations...")
+        # Search tracks using the emotion genre
+        genre = profile["seed_genres"][0]
 
-        response = spotify.recommendations(
-            limit=8,
-            **profile
+        print(f"Searching Spotify for genre: {genre}")
+
+        response = spotify.search(
+            q=f'genre:"{genre}"',
+            type="track",
+            limit=10
         )
-
-        print(response)
 
     except Exception as e:
         print("\n==========================")
-        print("SPOTIFY ERROR:")
+        print("SPOTIFY ERROR")
         print(type(e).__name__)
         print(e)
         print("==========================\n")
@@ -147,18 +168,22 @@ def _get_spotify_recommendations(profile: dict) -> list[dict]:
 
     tracks = []
 
-    for item in response["tracks"]:
+    for item in response["tracks"]["items"]:
         artists = ", ".join(a["name"] for a in item["artists"])
 
-        tracks.append({
-            "title": item["name"],
-            "artist": artists,
-            "mood": profile["seed_genres"][0],
-            "match": 90,
-            "spotify_uri": item["uri"],
-            "preview_url": item["preview_url"],
-            "external_url": item["external_urls"]["spotify"],
-        })
+        tracks.append(
+            {
+                "title": item["name"],
+                "artist": artists,
+                "mood": genre,
+                "match": 90,
+                "spotify_uri": item["uri"],
+                "preview_url": item.get("preview_url"),
+                "external_url": item["external_urls"]["spotify"],
+            }
+        )
+
+    print(f"Found {len(tracks)} Spotify tracks")
 
     return tracks
 def _get_user_auth_manager():

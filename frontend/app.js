@@ -191,37 +191,59 @@ document.querySelectorAll(".quick-prompts button").forEach((button) => {
   });
 });
 
-savePlaylist.addEventListener("click", () => {
-  if (!currentPlaylist) {
-    return;
-  }
+savePlaylist.addEventListener("click", async () => {
+  if (!currentPlaylist) return;
 
-  const trackUris = currentPlaylist.tracks.map((track) => track.spotify_uri).filter(Boolean);
+  const trackUris = currentPlaylist.tracks
+    .map(track => track.spotify_uri)
+    .filter(Boolean);
+
+  console.log("Track URIs:", trackUris);
 
   if (!trackUris.length) {
-    savePlaylist.textContent = "Spotify auth needed";
-    window.open("http://127.0.0.1:8000/api/music/login", "_blank", "noopener,noreferrer");
+    alert("No Spotify tracks found.");
     return;
   }
 
-  fetch("http://127.0.0.1:8000/api/music/save-playlist", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      name: currentPlaylist.playlist_name,
-      description: currentPlaylist.summary,
-      track_uris: trackUris,
-    }),
-  })
-    .then((response) => response.json())
-    .then((payload) => {
-      savePlaylist.textContent = payload.external_url ? "Saved to Spotify" : "Spotify auth needed";
-    })
-    .catch(() => {
-      savePlaylist.textContent = "Spotify auth needed";
-    });
-});
+  savePlaylist.disabled = true;
+  savePlaylist.textContent = "Saving...";
 
-connectSpotify.addEventListener("click", () => {
-  window.open("http://127.0.0.1:8000/api/music/login", "_blank", "noopener,noreferrer");
+  try {
+    const response = await fetch(
+      "http://127.0.0.1:8000/api/music/save-playlist",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          name: currentPlaylist.playlist_name,
+          description: currentPlaylist.summary,
+          track_uris: trackUris,
+        }),
+      }
+    );
+
+    const payload = await response.json();
+
+    console.log(payload);
+
+    if (!response.ok) {
+      throw new Error(payload.detail || "Failed to save playlist");
+    }
+
+    savePlaylist.textContent = "Saved to Spotify";
+
+    if (payload.external_url) {
+      window.open(payload.external_url, "_blank");
+    }
+
+  } catch (err) {
+    console.error(err);
+    alert(err.message);
+
+    savePlaylist.textContent = "Save to Spotify";
+  } finally {
+    savePlaylist.disabled = false;
+  }
 });
